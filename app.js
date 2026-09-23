@@ -1,0 +1,1 @@
+fetch("data/events.json").then(r=>r.json()).then(events=>{const c=document.getElementById("events");events.forEach(e=>{c.innerHTML+=`<div class="card"><h2>${e.name}</h2><p><b>Date:</b> ${e.date}</p><p><b>Registration:</b> ${e.registrationClose}</p><p><b>Registered:</b> ${e.registered}</p><a class="button" href="event.html?id=${e.id}">View Details</a></div>`})})

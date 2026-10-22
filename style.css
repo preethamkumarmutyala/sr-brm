@@ -26,7 +26,7 @@ body {
     margin: 15px;
     border-radius: 6px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
 }
 
 .event-title {
@@ -49,29 +49,13 @@ body {
     padding: 15px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th,
-td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-th {
-    background: #efefef;
-}
-
 .button {
     display: inline-block;
     padding: 10px 15px;
     border-radius: 4px;
+    margin-right: 10px;
     color: white;
     text-decoration: none;
-    margin-right: 10px;
 }
 
 .green {
@@ -80,9 +64,4 @@ th {
 
 .orange {
     background: #fd7e14;
-}
-
-.control {
-    padding: 6px;
-    border-bottom: 1px solid #eee;
 }

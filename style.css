@@ -4,8 +4,6 @@ body {
     background: #f5f5f5;
 }
 
-/* Header */
-
 .header {
     background: #0f4c81;
     color: white;
@@ -17,20 +15,18 @@ body {
 }
 
 .header p {
-    margin-top: 8px;
+    margin-top: 10px;
 }
-
-/* Summary */
 
 #summary {
     background: white;
     margin: 15px;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
 }
 
-/* Tab Buttons */
+/* BIG GREEN BRM BUTTONS */
 
 .tab-bar {
     display: flex;
@@ -39,30 +35,28 @@ body {
     margin-top: 20px;
 }
 
-.tab-bar button {
+.event-tab {
     background: #28a745;
     color: white;
     border: none;
-    padding: 18px 30px;
-    cursor: pointer;
     border-radius: 8px;
-    font-size: 22px;
-    font-weight: bold;
     min-width: 180px;
-    box-shadow: 0 2px 6px rgba(0,0,0,.15);
-    transition: 0.2s;
+    padding: 18px 25px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,.15);
 }
 
-.tab-bar button:hover {
+.event-tab:hover {
     background: #218838;
-    transform: translateY(-2px);
 }
 
-.tab-bar button.active {
+.event-tab.active {
     background: #0f4c81;
 }
 
-/* Event Content */
+/* CONTENT */
 
 .event {
     background: white;
@@ -74,36 +68,35 @@ body {
 
 .event-title {
     background: #ececec;
-    padding: 18px;
-    font-size: 28px;
+    padding: 20px;
+    font-size: 30px;
     font-weight: bold;
     color: #0f4c81;
 }
 
 .section-title {
-    background: #f5f5f5;
+    background: #f6f6f6;
     padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
-    font-weight: bold;
-    font-size: 18px;
 }
 
 .section-body {
     padding: 20px;
 }
 
-/* Action Buttons */
+/* ACTION BUTTONS */
 
 .button {
     display: inline-block;
-    padding: 12px 18px;
+    padding: 12px 20px;
     border-radius: 6px;
-    text-decoration: none;
     color: white;
-    margin-right: 10px;
-    margin-bottom: 10px;
+    text-decoration: none;
     font-weight: bold;
+    margin-right: 10px;
 }
 
 .green {
@@ -114,36 +107,7 @@ body {
     background: #fd7e14;
 }
 
-.blue {
-    background: #0078d4;
-}
-
-/* Rider Table */
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th,
-td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-}
-
-th {
-    background: #efefef;
-}
-
-/* Controls */
-
-.control {
-    padding: 8px;
-    border-bottom: 1px solid #eee;
-}
-
-/* Mobile */
+/* MOBILE */
 
 @media (max-width: 768px) {
 
@@ -151,12 +115,7 @@ th {
         flex-direction: column;
     }
 
-    .tab-bar button {
+    .event-tab {
         width: 100%;
-        min-width: unset;
-    }
-
-    .event-title {
-        font-size: 22px;
     }
 }

@@ -17,40 +17,44 @@ document.getElementById("summary").innerHTML = `
 <h2>SR BRM Registration Dashboard</h2>
 
 <div class="tab-bar">
-    <button class="event-tab" onclick="showOneWeekSR()">
-        ONE WEEK SR RIDERS
-    </button>
 
-    <button class="event-tab" onclick="showEvent('600')">
-        600 BRM
-    </button>
+<button class="event-tab" onclick="showOneWeekSR()">
+ONE WEEK SR RIDERS
+</button>
 
-    <button class="event-tab" onclick="showEvent('200')">
-        200 BRM
-    </button>
+<button class="event-tab" onclick="showEvent('600')">
+600 BRM
+</button>
 
-    <button class="event-tab" onclick="showEvent('300')">
-        300 BRM
-    </button>
+<button class="event-tab" onclick="showEvent('200')">
+200 BRM
+</button>
 
-    <button class="event-tab" onclick="showEvent('400')">
-        400 BRM
-    </button>
+<button class="event-tab" onclick="showEvent('300')">
+300 BRM
+</button>
+
+<button class="event-tab" onclick="showEvent('400')">
+400 BRM
+</button>
+
 </div>
 `;
 
 document.getElementById("events").innerHTML = `
 <div id="eventContent">
 
-    <div class="event">
-        <div class="event-title">
-            Welcome
-        </div>
+<div class="event">
 
-        <div class="section-body">
-            Select a BRM or ONE WEEK SR RIDERS.
-        </div>
-    </div>
+<div class="event-title">
+Welcome
+</div>
+
+<div class="section-body">
+Select a BRM or ONE WEEK SR RIDERS.
+</div>
+
+</div>
 
 </div>
 `;
@@ -164,8 +168,6 @@ async function showOneWeekSR() {
 
 async function showEvent(distance) {
 
-    const event = EVENTS[distance];
-
     document.getElementById("eventContent").innerHTML = `
     <div class="event">
         <div class="event-title">
@@ -176,16 +178,24 @@ async function showEvent(distance) {
 
     try {
 
-        const response =
+        const eventInfo = EVENTS[distance];
+
+        const eventResponse =
             await fetch(
                 `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${distance}`
             );
 
-        const data =
-            await response.json();
+        const eventData =
+            await eventResponse.json();
+
+        const routeResponse =
+            await fetch(`data/${distance}.json`);
+
+        const routeData =
+            await routeResponse.json();
 
         const ridersHtml =
-            (data.riders || [])
+            (eventData.riders || [])
             .map(r => `
                 <tr>
                     <td>${r.seq}</td>
@@ -197,12 +207,33 @@ async function showEvent(distance) {
             `)
             .join("");
 
+        const controlsHtml =
+            (routeData.controls || [])
+            .map(c => `
+                <tr>
+                    <td>${c.km}</td>
+                    <td>${c.location}</td>
+                    <td>${c.type}</td>
+                </tr>
+            `)
+            .join("");
+
+        const cueSheetHtml =
+            (routeData.cueSheet || [])
+            .map(c => `
+                <tr>
+                    <td>${c.km}</td>
+                    <td>${c.instruction}</td>
+                </tr>
+            `)
+            .join("");
+
         document.getElementById("eventContent").innerHTML = `
 
         <div class="event">
 
             <div class="event-title">
-                ${data.title}
+                ${eventData.title}
             </div>
 
             <div class="section-title">
@@ -213,24 +244,21 @@ async function showEvent(distance) {
 
                 <p>
                     <strong>Registration Close:</strong>
-                    ${data.registrationClose}
+                    ${eventData.registrationClose}
                 </p>
 
                 <p>
                     <strong>Registered Riders:</strong>
-
                     <span class="badge">
-                        ${data.riderCount}
+                        ${eventData.riderCount}
                     </span>
                 </p>
 
                 <a
                     class="button green"
-                    href="${event.route}"
+                    href="${eventInfo.route}"
                     target="_blank">
-
                     VIEW ROUTE
-
                 </a>
 
             </div>
@@ -244,7 +272,6 @@ async function showEvent(distance) {
                 <table>
 
                     <thead>
-
                         <tr>
                             <th>S.No</th>
                             <th>AIR Number</th>
@@ -252,11 +279,57 @@ async function showEvent(distance) {
                             <th>Result</th>
                             <th>Club</th>
                         </tr>
-
                     </thead>
 
                     <tbody>
                         ${ridersHtml}
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="section-title">
+                CONTROLS
+            </div>
+
+            <div class="section-body">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>KM</th>
+                            <th>Location</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${controlsHtml}
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="section-title">
+                CUE SHEET
+            </div>
+
+            <div class="section-body">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>KM</th>
+                            <th>Instruction</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${cueSheetHtml}
                     </tbody>
 
                 </table>
@@ -277,4 +350,11 @@ async function showEvent(distance) {
                 Failed To Load
             </div>
 
-            <div class="section
+            <div class="section-body">
+                ${err}
+            </div>
+
+        </div>
+        `;
+    }
+}

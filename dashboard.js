@@ -21,21 +21,21 @@ document.getElementById("summary").innerHTML = `
 
 <div class="tab-bar">
 
-    <button class="event-tab" onclick="showEvent('600')">
-        600 BRM
-    </button>
+<button class="event-tab" onclick="showEvent('600')">
+600 BRM
+</button>
 
-    <button class="event-tab" onclick="showEvent('200')">
-        200 BRM
-    </button>
+<button class="event-tab" onclick="showEvent('200')">
+200 BRM
+</button>
 
-    <button class="event-tab" onclick="showEvent('300')">
-        300 BRM
-    </button>
+<button class="event-tab" onclick="showEvent('300')">
+300 BRM
+</button>
 
-    <button class="event-tab" onclick="showEvent('400')">
-        400 BRM
-    </button>
+<button class="event-tab" onclick="showEvent('400')">
+400 BRM
+</button>
 
 </div>
 `;
@@ -43,17 +43,17 @@ document.getElementById("summary").innerHTML = `
 document.getElementById("events").innerHTML = `
 <div id="eventContent">
 
-    <div class="event">
+<div class="event">
 
-        <div class="event-title">
-            Select a BRM
-        </div>
+<div class="event-title">
+Select a BRM
+</div>
 
-        <div class="section-body">
-            Click any BRM button above.
-        </div>
+<div class="section-body">
+Click any BRM above.
+</div>
 
-    </div>
+</div>
 
 </div>
 `;
@@ -63,11 +63,11 @@ async function showEvent(distance) {
     const event = EVENTS[distance];
 
     document.getElementById("eventContent").innerHTML = `
-    <div class="event">
-        <div class="event-title">
-            Loading ${distance} BRM...
+        <div class="event">
+            <div class="event-title">
+                Loading...
+            </div>
         </div>
-    </div>
     `;
 
     try {
@@ -82,11 +82,11 @@ async function showEvent(distance) {
 
         const ridersHtml =
             (data.riders || [])
-            .map((r, index) => `
+            .map(r => `
                 <tr>
-                    <td>${index + 1}</td>
                     <td>${r.air}</td>
                     <td>${r.name}</td>
+                    <td>${r.result}</td>
                     <td>${r.club}</td>
                 </tr>
             `)
@@ -113,14 +113,18 @@ async function showEvent(distance) {
 
                 <p>
                     <strong>Registered Riders:</strong>
-                    ${data.riderCount}
+                    <span class="badge">
+                        ${data.riderCount}
+                    </span>
                 </p>
 
                 <a
                     class="button green"
-                    target="_blank"
-                    href="${event.route}">
+                    href="${event.route}"
+                    target="_blank">
+
                     VIEW ROUTE
+
                 </a>
 
             </div>
@@ -129,50 +133,4 @@ async function showEvent(distance) {
                 FELLOW RIDERS
             </div>
 
-            <div class="section-body">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>AIR</th>
-                            <th>Name</th>
-                            <th>Club</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        ${ridersHtml}
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-        `;
-
-    }
-    catch (error) {
-
-        document.getElementById("eventContent").innerHTML = `
-
-        <div class="event">
-
-            <div class="event-title">
-                Error loading ${distance} BRM
-            </div>
-
-            <div class="section-body">
-                ${error}
-            </div>
-
-        </div>
-
-        `;
-
-    }
-
-}
+ 

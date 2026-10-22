@@ -42,6 +42,10 @@ async function initDashboard() {
         <div class="tab-bar">
 
             <button class="event-tab"
+                onclick="showBRMAssistant()">
+                BRM ASSISTANT
+                </button>
+            <button class="event-tab"
                 onclick="showOneWeekSR()">
                 ONE WEEK SR RIDERS
             </button>
@@ -355,4 +359,224 @@ async function showEvent(distance) {
 
         </div>
     `;
+}
+async function showBRMAssistant() {
+
+    document.getElementById("eventContent").innerHTML = `
+
+    <div class="event">
+
+        <div class="event-title">
+            BRM ASSISTANT
+        </div>
+
+        <div class="section-body">
+
+            <p>
+                Try:
+            </p>
+
+            <ul>
+                <li>600 riders</li>
+                <li>400 riders</li>
+                <li>200 controls</li>
+                <li>600 controls</li>
+                <li>start time of 400</li>
+                <li>start location of 200</li>
+                <li>registration close of 300</li>
+                <li>one week sr riders</li>
+            </ul>
+
+            <input
+                id="chatQuestion"
+                type="text"
+                placeholder="Ask BRM Assistant..."
+                style="width:75%;padding:12px;"
+            >
+
+            <button
+                class="event-tab"
+                onclick="askBRMQuestion()">
+                ASK
+            </button>
+
+            <div id="chatAnswer"
+                 style="margin-top:20px;">
+            </div>
+
+        </div>
+
+    </div>
+    `;
+}
+
+async function askBRMQuestion() {
+
+    const question =
+        document
+            .getElementById("chatQuestion")
+            .value
+            .toLowerCase()
+            .trim();
+
+    const answer =
+        document.getElementById("chatAnswer");
+
+    answer.innerHTML = "Loading...";
+
+    const [e200,e300,e400,e600] =
+        await Promise.all([
+            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/200").then(r=>r.json()),
+            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/300").then(r=>r.json()),
+            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/400").then(r=>r.json()),
+            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/600").then(r=>r.json())
+        ]);
+
+    const events = {
+        "200": e200,
+        "300": e300,
+        "400": e400,
+        "600": e600
+    };
+
+    if (question.includes("one week sr")) {
+
+        const riderMap = {};
+
+        [e200,e300,e400,e600]
+        .forEach(event => {
+
+            (event.riders || []).forEach(rider => {
+
+                if (!riderMap[rider.air]) {
+                    riderMap[rider.air] = {
+                        air: rider.air,
+                        name: rider.name
+                    };
+                }
+
+                riderMap[rider.air].count =
+                    (riderMap[rider.air].count || 0) + 1;
+
+            });
+
+        });
+
+        const riders =
+            Object.values(riderMap)
+                .filter(r => r.count === 4);
+
+        answer.innerHTML = `
+            <h3>ONE WEEK SR RIDERS</h3>
+
+            ${riders.map(r =>
+                `${r.air} - ${r.name}`
+            ).join("<br>")}
+        `;
+
+        return;
+    }
+
+    const match =
+        question.match(/(200|300|400|600)/);
+
+    if (!match) {
+
+        answer.innerHTML =
+            "Mention 200, 300, 400 or 600.";
+
+        return;
+    }
+
+    const distance =
+        match[1];
+
+    const event =
+        events[distance];
+
+    if (question.includes("riders")) {
+
+        answer.innerHTML = `
+            <h3>${event.title}</h3>
+
+            Riders:
+            <strong>${event.riderCount}</strong>
+
+            <hr>
+
+            ${(event.riders || [])
+                .map(r =>
+                    `${r.air} - ${r.name}`
+                )
+                .join("<br>")}
+        `;
+
+        return;
+    }
+
+    if (
+        question.includes("start time")
+    ) {
+
+        answer.innerHTML = `
+            <h3>${event.title}</h3>
+
+            Start Time:
+            <strong>${event.startTime}</strong>
+        `;
+
+        return;
+    }
+
+    if (
+        question.includes("start location")
+    ) {
+
+        answer.innerHTML = `
+            <h3>${event.title}</h3>
+
+            Start Location:
+            <strong>${event.startLocation}</strong>
+        `;
+
+        return;
+    }
+
+    if (
+        question.includes("registration")
+    ) {
+
+        answer.innerHTML = `
+            <h3>${event.title}</h3>
+
+            Registration Close:
+            <strong>${event.registrationClose}</strong>
+        `;
+
+        return;
+    }
+
+    if (
+        question.includes("controls")
+    ) {
+
+        const route =
+            await fetch(`data/${distance}.json`)
+            .then(r => r.json());
+
+        answer.innerHTML = `
+            <h3>${distance} CONTROLS</h3>
+
+            ${route.controls
+                .map(c =>
+                    `${c.km} km - ${c.location}`
+                )
+                .join("<br>")}
+        `;
+
+        return;
+    }
+
+    answer.innerHTML =
+        "Question not understood.";
 }

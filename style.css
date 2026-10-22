@@ -1,7 +1,7 @@
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
+    font-family: Segoe UI, Arial, sans-serif;
+    background: #f3f4f6;
 }
 
 /* HEADER */
@@ -20,22 +20,22 @@ body {
     margin-top: 10px;
 }
 
-/* SUMMARY AREA */
+/* SUMMARY */
 
 #summary {
     background: white;
     margin: 15px;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,.1);
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.12);
 }
 
-/* GREEN BRM BUTTONS */
+/* BUTTON BAR */
 
 .tab-bar {
     display: flex;
-    gap: 15px;
     flex-wrap: wrap;
+    gap: 15px;
     margin-top: 20px;
 }
 
@@ -47,9 +47,9 @@ body {
     min-width: 180px;
     padding: 18px 25px;
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,.2);
+    box-shadow: 0 3px 6px rgba(0,0,0,.15);
 }
 
 .event-tab:hover {
@@ -60,14 +60,14 @@ body {
     background: #0f4c81;
 }
 
-/* MAIN EVENT PANEL */
+/* EVENT CARD */
 
 .event {
     background: white;
     margin: 15px;
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0,0,0,.1);
+    box-shadow: 0 2px 6px rgba(0,0,0,.12);
 }
 
 .event-title {
@@ -79,10 +79,10 @@ body {
 }
 
 .section-title {
-    background: #f5f5f5;
-    padding: 12px;
+    background: #f7f7f7;
+    padding: 14px;
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 700;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
 }
@@ -91,26 +91,26 @@ body {
     padding: 20px;
 }
 
-/* REGISTRATION COUNT BADGE */
+/* RIDER COUNT BADGE */
 
 .badge {
     display: inline-block;
     background: #28a745;
     color: white;
-    padding: 8px 14px;
-    border-radius: 18px;
+    padding: 8px 16px;
+    border-radius: 24px;
     font-weight: bold;
-    margin-left: 8px;
+    font-size: 15px;
 }
 
-/* ROUTE BUTTONS */
+/* ACTION BUTTONS */
 
 .button {
     display: inline-block;
-    padding: 12px 20px;
+    padding: 12px 18px;
     border-radius: 6px;
-    color: white;
     text-decoration: none;
+    color: white;
     font-weight: bold;
     margin-right: 10px;
     margin-top: 10px;
@@ -131,10 +131,12 @@ body {
 /* EXCEL STYLE TABLE */
 
 table {
-    width: 100%;
+    width: auto;
+    min-width: 900px;
     border-collapse: collapse;
-    margin-top: 15px;
+    border: 1px solid #cfcfcf;
     background: white;
+    margin-top: 15px;
 }
 
 thead {
@@ -143,54 +145,4 @@ thead {
 }
 
 th {
-    padding: 12px;
-    border: 1px solid #d0d0d0;
-    text-align: left;
-}
-
-td {
-    padding: 10px;
-    border: 1px solid #dcdcdc;
-    text-align: left;
-}
-
-tbody tr:nth-child(even) {
-    background: #f8f8f8;
-}
-
-tbody tr:hover {
-    background: #e7f1ff;
-}
-
-/* CONTROLS */
-
-.control {
-    border-bottom: 1px solid #ebebeb;
-    padding: 10px;
-}
-
-.control:nth-child(even) {
-    background: #fafafa;
-}
-
-/* MOBILE */
-
-@media (max-width: 768px) {
-
-    .tab-bar {
-        flex-direction: column;
-    }
-
-    .event-tab {
-        width: 100%;
-        min-width: auto;
-    }
-
-    .event-title {
-        font-size: 24px;
-    }
-
-    table {
-        font-size: 14px;
-    }
-}
+    border:

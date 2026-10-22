@@ -1,0 +1,29 @@
+{
+  "event": "300 BRM",
+  "routeName": "300 BRM",
+  "distance": 304.2,
+  "rideWithGps": "https://ridewithgps.com/routes/46588152",
+
+  "controls": [
+    {
+      "km": 90.4,
+      "location": "DUDDEDA TOLL PLAZA",
+      "type": "CONTROL"
+    },
+    {
+      "km": 152.6,
+      "location": "ROYAL BAWARCHI",
+      "type": "CONTROL"
+    },
+    {
+      "km": 221.0,
+      "location": "DUDDEDA TOLL PLAZA",
+      "type": "CONTROL"
+    },
+    {
+      "km": 304.2,
+      "location": "FINISH",
+      "type": "FINISH"
+    }
+  ]
+}

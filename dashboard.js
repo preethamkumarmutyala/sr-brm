@@ -43,17 +43,17 @@ document.getElementById("summary").innerHTML = `
 document.getElementById("events").innerHTML = `
 <div id="eventContent">
 
-<div class="event">
+    <div class="event">
 
-<div class="event-title">
-Select a BRM
-</div>
+        <div class="event-title">
+            Select a BRM
+        </div>
 
-<div class="section-body">
-Click any BRM above.
-</div>
+        <div class="section-body">
+            Click a BRM above.
+        </div>
 
-</div>
+    </div>
 
 </div>
 `;
@@ -63,11 +63,11 @@ async function showEvent(distance) {
     const event = EVENTS[distance];
 
     document.getElementById("eventContent").innerHTML = `
-    <div class="event">
-        <div class="event-title">
-            Loading...
+        <div class="event">
+            <div class="event-title">
+                Loading...
+            </div>
         </div>
-    </div>
     `;
 
     try {
@@ -84,6 +84,7 @@ async function showEvent(distance) {
             (data.riders || [])
             .map(r => `
                 <tr>
+                    <td>${r.seq}</td>
                     <td>${r.air}</td>
                     <td>${r.name}</td>
                     <td>${r.result}</td>
@@ -138,16 +139,21 @@ async function showEvent(distance) {
                 <table>
 
                     <thead>
+
                         <tr>
+                            <th>S.No</th>
                             <th>AIR Number</th>
                             <th>Rider Name</th>
                             <th>Result</th>
                             <th>Club</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
+
                         ${ridersHtml}
+
                     </tbody>
 
                 </table>
@@ -162,17 +168,17 @@ async function showEvent(distance) {
     catch (err) {
 
         document.getElementById("eventContent").innerHTML = `
-        <div class="event">
+            <div class="event">
 
-            <div class="event-title">
-                Failed to load
+                <div class="event-title">
+                    Failed to load data
+                </div>
+
+                <div class="section-body">
+                    ${err}
+                </div>
+
             </div>
-
-            <div class="section-body">
-                ${err}
-            </div>
-
-        </div>
         `;
     }
 }

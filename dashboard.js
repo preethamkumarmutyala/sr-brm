@@ -1,89 +1,99 @@
 const EVENTS = [
+
 {
-    distance: "600",
+    name: "600 BRM",
     route: "https://ridewithgps.com/routes/44588666",
     audax: "https://www.audaxindia.in/event-e-10047"
 },
+
 {
-    distance: "200",
+    name: "200 BRM",
     route: "https://ridewithgps.com/routes/49469273",
     audax: "https://www.audaxindia.in/event-e-10048"
 },
+
 {
-    distance: "300",
+    name: "300 BRM",
     route: "https://ridewithgps.com/routes/46588152",
     audax: "https://www.audaxindia.in/event-e-10049"
 },
+
 {
-    distance: "400",
+    name: "400 BRM",
     route: "https://ridewithgps.com/routes/49468783",
     audax: "https://www.audaxindia.in/event-e-10050"
 }
+
 ];
 
-async function loadDashboard() {
+document.getElementById("summary").innerHTML = `
+<h2>Registration Dashboard</h2>
+<p>
+Click a BRM to expand details.
+</p>
+`;
 
-    document.getElementById("summary").innerHTML = `
-        <h2>Registration Dashboard</h2>
-        <p>
-            600, 200, 300 and 400 BRMs
-        </p>
-    `;
+let html = "";
 
-    let html = "";
+for (const event of EVENTS) {
 
-    for (const event of EVENTS) {
+    html += `
 
-        html += `
+    <details class="event">
 
-        <div class="event">
+        <summary class="event-title">
+            ${event.name}
+        </summary>
 
-            <div class="event-title">
-                ${event.distance} BRM
-            </div>
+        <div class="section-title">
+            DETAILS
+        </div>
 
-            <div class="section-title">
-                DETAILS
-            </div>
+        <div class="section-body">
 
-            <div class="section-body">
+            <p>
+                Event details will load from Audax.
+            </p>
 
-                <p>
-                    Registration information will be loaded from Audax.
-                </p>
+            <a
+                class="button green"
+                target="_blank"
+                href="${event.route}">
+                VIEW ROUTE
+            </a>
 
-                <a
-                    class="button green"
-                    target="_blank"
-                    href="${event.route}">
-                    VIEW ROUTE
-                </a>
-
-                <a
-                    class="button orange"
-                    target="_blank"
-                    href="${event.audax}">
-                    AUDAX PAGE
-                </a>
-
-            </div>
-
-            <div class="section-title">
-                FELLOW RIDERS
-            </div>
-
-            <div class="section-body">
-
-                Live rider extraction coming next.
-
-            </div>
+            <a
+                class="button orange"
+                target="_blank"
+                href="${event.audax}">
+                AUDAX PAGE
+            </a>
 
         </div>
 
-        `;
-    }
+        <div class="section-title">
+            FELLOW RIDERS
+        </div>
 
-    document.getElementById("events").innerHTML = html;
+        <div class="section-body">
+
+            Registration extraction coming next.
+
+        </div>
+
+        <div class="section-title">
+            CONTROLS
+        </div>
+
+        <div class="section-body">
+
+            Controls will be loaded next.
+
+        </div>
+
+    </details>
+
+    `;
 }
 
-loadDashboard();
+document.getElementById("events").innerHTML = html;

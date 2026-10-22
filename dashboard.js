@@ -17,84 +17,70 @@ loadSummary();
 
 async function loadSummary() {
 
-    const e600 =
-        await fetch(
-            "https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/600"
-        ).then(r => r.json());
-
-    const e200 =
-        await fetch(
-            "https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/200"
-        ).then(r => r.json());
-
-    const e300 =
-        await fetch(
-            "https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/300"
-        ).then(r => r.json());
-
-    const e400 =
-        await fetch(
-            "https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/400"
-        ).then(r => r.json());
+    const results = await Promise.all([
+        fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/600").then(r => r.json()),
+        fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/200").then(r => r.json()),
+        fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/300").then(r => r.json()),
+        fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/400").then(r => r.json())
+    ]);
 
     const total =
-        e600.riderCount +
-        e200.riderCount +
-        e300.riderCount +
-        e400.riderCount;
+        results[0].riderCount +
+        results[1].riderCount +
+        results[2].riderCount +
+        results[3].riderCount;
 
     document.getElementById("summary").innerHTML = `
+        <h2>SR BRM Registration Dashboard</h2>
 
-    <h2>SR BRM Registration Dashboard</h2>
+        <p>
+            Total Registrations:
+            <span class="badge">${total}</span>
+        </p>
 
-    <p>
-        Total Registrations:
-        <span class="badge">
-            ${total}
-        </span>
-    </p>
+        <div class="tab-bar">
 
-    <div class="tab-bar">
+            <button class="event-tab"
+                    onclick="showOneWeekSR()">
+                ONE WEEK SR RIDERS
+            </button>
 
-        <button class="event-tab" onclick="showOneWeekSR()">
-            ONE WEEK SR RIDERS
-        </button>
+            <button class="event-tab"
+                    onclick="showEvent('600')">
+                600 BRM (${results[0].riderCount})
+            </button>
 
-        <button class="event-tab" onclick="showEvent('600')">
-            600 BRM (${e600.riderCount})
-        </button>
+            <button class="event-tab"
+                    onclick="showEvent('200')">
+                200 BRM (${results[1].riderCount})
+            </button>
 
-        <button class="event-tab" onclick="showEvent('200')">
-            200 BRM (${e200.riderCount})
-        </button>
+            <button class="event-tab"
+                    onclick="showEvent('300')">
+                300 BRM (${results[2].riderCount})
+            </button>
 
-        <button class="event-tab" onclick="showEvent('300')">
-            300 BRM (${e300.riderCount})
-        </button>
+            <button class="event-tab"
+                    onclick="showEvent('400')">
+                400 BRM (${results[3].riderCount})
+            </button>
 
-        <button class="event-tab" onclick="showEvent('400')">
-            400 BRM (${e400.riderCount})
-        </button>
-
-    </div>
-
+        </div>
     `;
 }
 
 document.getElementById("events").innerHTML = `
 <div id="eventContent">
 
-<div class="event">
+    <div class="event">
+        <div class="event-title">
+            Welcome
+        </div>
 
-<div class="event-title">
-Welcome
-</div>
-
-<div class="section-body">
-Select a BRM or ONE WEEK SR RIDERS.
-</div>
-
-</div>
+        <div class="section-body">
+            Select a BRM or ONE WEEK SR RIDERS.
+        </div>
+    </div>
 
 </div>
 `;
@@ -109,7 +95,7 @@ async function showOneWeekSR() {
     </div>
     `;
 
-    const distances = ["200", "300", "400", "600"];
+    const distances = ["200","300","400","600"];
 
     const results = await Promise.all(
         distances.map(distance =>
@@ -121,7 +107,7 @@ async function showOneWeekSR() {
 
     const riderMap = {};
 
-    results.forEach((event, index) => {
+    results.forEach((event,index) => {
 
         const distance = distances[index];
 
@@ -130,14 +116,12 @@ async function showOneWeekSR() {
             const key = rider.air;
 
             if (!riderMap[key]) {
-
                 riderMap[key] = {
                     air: rider.air,
                     name: rider.name,
                     club: rider.club,
                     events: []
                 };
-
             }
 
             riderMap[key].events.push(distance);
@@ -164,45 +148,44 @@ async function showOneWeekSR() {
         `).join("");
 
     document.getElementById("eventContent").innerHTML = `
+        <div class="event">
 
-    <div class="event">
+            <div class="event-title">
+                ONE WEEK SR RIDERS
+            </div>
 
-        <div class="event-title">
-            ONE WEEK SR RIDERS
+            <div class="section-body">
+
+                <p>
+                    Riders Registered For All 4 Events:
+                    <span class="badge">
+                        ${riders.length}
+                    </span>
+                </p>
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>AIR Number</th>
+                            <th>Rider Name</th>
+                            <th>Club</th>
+                            <th>200</th>
+                            <th>300</th>
+                            <th>400</th>
+                            <th>600</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${rows}
+                    </tbody>
+
+                </table>
+
+            </div>
+
         </div>
-
-        <div class="section-body">
-
-            <p>
-                <strong>Total Riders:</strong>
-                <span class="badge">
-                    ${riders.length}
-                </span>
-            </p>
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>AIR Number</th>
-                        <th>Rider Name</th>
-                        <th>Club</th>
-                        <th>200</th>
-                        <th>300</th>
-                        <th>400</th>
-                        <th>600</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    ${rows}
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
     `;
 }
 
@@ -216,185 +199,164 @@ async function showEvent(distance) {
     </div>
     `;
 
-    try {
+    const eventData =
+        await fetch(
+            `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${distance}`
+        ).then(r => r.json());
 
-        const eventInfo = EVENTS[distance];
+    const routeData =
+        await fetch(`data/${distance}.json`)
+        .then(r => r.json());
 
-        const eventResponse =
-            await fetch(
-                `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${distance}`
-            );
+    const ridersHtml =
+        (eventData.riders || [])
+        .map(r => `
+            <tr>
+                <td>${r.seq}</td>
+                <td>${r.air}</td>
+                <td>${r.name}</td>
+                <td>${r.result}</td>
+                <td>${r.club}</td>
+            </tr>
+        `)
+        .join("");
 
-        const eventData =
-            await eventResponse.json();
+    const controlsHtml =
+        (routeData.controls || [])
+        .map(c => `
+            <tr>
+                <td>${c.km}</td>
+                <td>${c.location}</td>
+                <td>${c.type}</td>
+            </tr>
+        `)
+        .join("");
 
-        const routeResponse =
-            await fetch(`data/${distance}.json`);
+    const cueSheetHtml =
+        (routeData.cueSheet || [])
+        .map(c => `
+            <tr>
+                <td>${c.km}</td>
+                <td>${c.instruction}</td>
+            </tr>
+        `)
+        .join("");
 
-        const routeData =
-            await routeResponse.json();
+    document.getElementById("eventContent").innerHTML = `
 
-        const ridersHtml =
-            (eventData.riders || [])
-            .map(r => `
-                <tr>
-                    <td>${r.seq}</td>
-                    <td>${r.air}</td>
-                    <td>${r.name}</td>
-                    <td>${r.result}</td>
-                    <td>${r.club}</td>
-                </tr>
-            `)
-            .join("");
+    <div class="event">
 
-        const controlsHtml =
-            (routeData.controls || [])
-            .map(c => `
-                <tr>
-                    <td>${c.km}</td>
-                    <td>${c.location}</td>
-                    <td>${c.type}</td>
-                </tr>
-            `)
-            .join("");
+        <div class="event-title">
+            ${eventData.title}
+        </div>
 
-        const cueSheetHtml =
-            (routeData.cueSheet || [])
-            .map(c => `
-                <tr>
-                    <td>${c.km}</td>
-                    <td>${c.instruction}</td>
-                </tr>
-            `)
-            .join("");
+        <div class="section-title">
+            DETAILS
+        </div>
 
-        document.getElementById("eventContent").innerHTML = `
+        <div class="section-body">
 
-        <div class="event">
+            <p><strong>Event:</strong> ${eventData.title}</p>
 
-            <div class="event-title">
-                ${eventData.title}
-            </div>
+            <p>
+                <strong>Registration Close:</strong>
+                ${eventData.registrationClose}
+            </p>
 
-            <div class="section-title">
-                DETAILS
-            </div>
+            <p>
+                <strong>Start Time:</strong>
+                ${eventData.startTime}
+            </p>
 
-            <div class="section-body">
+            <p>
+                <strong>Start Location:</strong>
+                ${eventData.startLocation}
+            </p>
 
-                <p>
-                    <strong>Registration Close:</strong>
-                    ${eventData.registrationClose}
-                </p>
+            <p>
+                <strong>Registered Riders:</strong>
+                <span class="badge">
+                    ${eventData.riderCount}
+                </span>
+            </p>
 
-                <p>
-                    <strong>Registered Riders:</strong>
-                    <span class="badge">
-                        ${eventData.riderCount}
-                    </span>
-                </p>
-
-                <a
-                    class="button green"
-                    href="${eventInfo.route}"
-                    target="_blank">
-                    VIEW ROUTE
-                </a>
-
-            </div>
-
-            <div class="section-title">
-                FELLOW RIDERS
-            </div>
-
-            <div class="section-body">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>S.No</th>
-                            <th>AIR Number</th>
-                            <th>Rider Name</th>
-                            <th>Result</th>
-                            <th>Club</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        ${ridersHtml}
-                    </tbody>
-
-                </table>
-
-            </div>
-
-            <div class="section-title">
-                CONTROLS
-            </div>
-
-            <div class="section-body">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>KM</th>
-                            <th>Location</th>
-                            <th>Type</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        ${controlsHtml}
-                    </tbody>
-
-                </table>
-
-            </div>
-
-            <div class="section-title">
-                CUE SHEET
-            </div>
-
-            <div class="section-body">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>KM</th>
-                            <th>Instruction</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        ${cueSheetHtml}
-                    </tbody>
-
-                </table>
-
-            </div>
+            <a class="button green"
+               href="${EVENTS[distance].route}"
+               target="_blank">
+               VIEW ROUTE
+            </a>
 
         </div>
 
-        `;
+        <div class="section-title">
+            FELLOW RIDERS
+        </div>
 
-    }
-    catch (err) {
+        <div class="section-body">
 
-        document.getElementById("eventContent").innerHTML = `
-        <div class="event">
+            <table>
 
-            <div class="event-title">
-                Failed To Load
-            </div>
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>AIR Number</th>
+                        <th>Rider Name</th>
+                        <th>Result</th>
+                        <th>Club</th>
+                    </tr>
+                </thead>
 
-            <div class="section-body">
-                ${err}
-            </div>
+                <tbody>
+                    ${ridersHtml}
+                </tbody>
+
+            </table>
 
         </div>
-        `;
-    }
+
+        <div class="section-title">
+            CONTROLS
+        </div>
+
+        <div class="section-body">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>KM</th>
+                        <th>Location</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    ${controlsHtml}
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="section-title">
+            CUE SHEET
+        </div>
+
+        <div class="   <tr>
+                        <th>KM</th>
+                        <th>Instruction</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    ${cueSheetHtml}
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    `;
 }

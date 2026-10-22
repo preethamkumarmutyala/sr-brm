@@ -1,10 +1,44 @@
 document.getElementById("summary").innerHTML = `
 <h2>Dashboard Loaded Successfully</h2>
+<p>JavaScript is loading correctly.</p>
 `;
 
 document.getElementById("events").innerHTML = `
+
 <div class="event">
-    <h2>1000 BRM</h2>
-    <p>If you see this, dashboard.js is working.</p>
+
+    <div class="event-title">
+        1000 BRM
+    </div>
+
+    <div class="section-title">
+        DETAILS
+    </div>
+
+    <div class="section-body">
+
+        <p>Registration Closes: 27-Sep-2026 23:59</p>
+
+        <a
+            class="button green"
+            target="_blank"
+            href="https://ridewithgps.com/routes/52862280">
+
+            VIEW ROUTE
+
+        </a>
+
+        <a
+            class="button orange"
+            target="_blank"
+            href="https://www.audaxindia.in/event-e-10046">
+
+            AUDAX PAGE
+
+        </a>
+
+    </div>
+
 </div>
+
 `;

@@ -53,6 +53,10 @@ document.getElementById("events").innerHTML = `
             Select a BRM Above
         </div>
 
+        <div class="section-body">
+            Click 600, 200, 300 or 400 BRM.
+        </div>
+
     </div>
 
 </div>
@@ -62,9 +66,11 @@ function showEvent(distance){
 
     document
         .querySelectorAll(".event-tab")
-        .forEach(x=>x.classList.remove("active"));
+        .forEach(btn => btn.classList.remove("active"));
 
-    const event = EVENTS[distance];
+    event.target.classList.add("active");
+
+    const current = EVENTS[distance];
 
     document.getElementById("eventContent").innerHTML = `
 
@@ -81,21 +87,36 @@ function showEvent(distance){
         <div class="section-body">
 
             <p>
-                Event details will be loaded from Audax.
+                Registration Close:
+                To be loaded from Audax
+            </p>
+
+            <p>
+                Start Location:
+                To be loaded from Audax
+            </p>
+
+            <p>
+                Start Time:
+                To be loaded from Audax
             </p>
 
             <a
                 class="button green"
-                target="_blank"
-                href="${event.route}">
+                href="${current.route}"
+                target="_blank">
+
                 VIEW ROUTE
+
             </a>
 
             <a
                 class="button orange"
-                target="_blank"
-                href="${event.audax}">
+                href="${current.audax}"
+                target="_blank">
+
                 AUDAX PAGE
+
             </a>
 
         </div>
@@ -105,7 +126,32 @@ function showEvent(distance){
         </div>
 
         <div class="section-body">
-            Rider extraction will go here.
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>AIR</th>
+                        <th>Name</th>
+                        <th>Club</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td colspan="4">
+                            Rider extraction coming next
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
         </div>
 
         <div class="section-title">
@@ -113,7 +159,11 @@ function showEvent(distance){
         </div>
 
         <div class="section-body">
-            Controls will go here.
+
+            <div class="control">
+                Controls will be loaded next.
+            </div>
+
         </div>
 
     </div>

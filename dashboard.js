@@ -239,8 +239,8 @@ async function showEvent(distance) {
         (routeData.cueSheet || [])
         .map(c => `
             <tr>
-                <td>${c.km}</td>
                 <td>${c.instruction}</td>
+                <td>${c.km}</td>
             </tr>
         `)
         .join("");
@@ -335,7 +335,7 @@ async function showEvent(distance) {
         </div>
 
         <div class="section-title">
-            CUE SHEET
+            ROUTE CHECKPOINTS
         </div>
 
         <div class="section-body">
@@ -344,8 +344,8 @@ async function showEvent(distance) {
 
                 <thead>
                     <tr>
+                        <th>Location</th>
                         <th>KM</th>
-                        <th>Instruction</th>
                     </tr>
                 </thead>
 

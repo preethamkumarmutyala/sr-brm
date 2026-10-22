@@ -1,10 +1,29 @@
-document.getElementById("summary").innerHTML = `
-<h2>Dashboard Loaded Successfully</h2>
-`;
+<!DOCTYPE html>
+<html lang="en">
 
-document.getElementById("events").innerHTML = `
-<div class="event">
-    <h2>1000 BRM</h2>
-    <p>If you see this, dashboard.js is working.</p>
-</div>
-`;
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SR BRM Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>SECUNDERABAD RANDONNEURS DASHBOARD</h1>
+        <p>All BRMs on a single page</p>
+    </div>
+
+    <div id="summary"></div>
+
+    <div id="events">
+        Loading...
+    </div>
+
+    <script src="dashboard.js"></script>
+
+</body>
+
+</html>

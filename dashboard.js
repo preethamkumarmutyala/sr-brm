@@ -13,65 +13,56 @@ const EVENTS = {
     }
 };
 
-async function initDashboard() {
+initDashboard();
 
-    document.getElementById("events").innerHTML = `
-        <div class="event">
-            <div class="event-title">
-                Loading Dashboard...
-            </div>
-        </div>
-    `;
+async function initDashboard() {
 
     const [e600, e200, e300, e400] =
         await Promise.all([
-            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/600").then(r => r.json()),
-            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/200").then(r => r.json()),
-            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/300").then(r => r.json()),
-            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/400").then(r => r.json())
+            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/600").then(r=>r.json()),
+            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/200").then(r=>r.json()),
+            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/300").then(r=>r.json()),
+            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/400").then(r=>r.json())
         ]);
 
-    const totalRegistrations =
+    const total =
         e600.riderCount +
         e200.riderCount +
         e300.riderCount +
         e400.riderCount;
 
     document.getElementById("summary").innerHTML = `
-
         <h2>One Week SR Tracker</h2>
 
         <p>
             Total Registrations:
-            <span class="badge">
-                ${totalRegistrations}
-            </span>
+            <span class="badge">${total}</span>
         </p>
 
         <div class="tab-bar">
 
             <button class="event-tab"
-                    onclick="showOneWeekSR()">
+                onclick="showOneWeekSR()">
                 ONE WEEK SR RIDERS
             </button>
 
             <button class="event-tab"
-                    onclick="showEvent('600')">
+                onclick="showEvent('600')">
                 600 BRM (${e600.riderCount})
             </button>
 
             <button class="event-tab"
-                    onclick="showEvent('200')">
+                onclick="showEvent('200')">
                 200 BRM (${e200.riderCount})
             </button>
 
             <button class="event-tab"
-                    onclick="showEvent('300')">
+                onclick="showEvent('300')">
                 300 BRM (${e300.riderCount})
             </button>
 
             <button class="event-tab"
-                    onclick="showEvent('400')">
+                onclick="showEvent('400')">
                 400 BRM (${e400.riderCount})
             </button>
 
@@ -82,7 +73,6 @@ async function initDashboard() {
         <div id="eventContent">
 
             <div class="event">
-
                 <div class="event-title">
                     Welcome
                 </div>
@@ -90,7 +80,6 @@ async function initDashboard() {
                 <div class="section-body">
                     Select a BRM or ONE WEEK SR RIDERS.
                 </div>
-
             </div>
 
         </div>
@@ -99,17 +88,17 @@ async function initDashboard() {
 
 async function showOneWeekSR() {
 
+    const distances = ["200","300","400","600"];
+
     document.getElementById("eventContent").innerHTML = `
         <div class="event">
             <div class="event-title">
-                Loading ONE WEEK SR Riders...
+                Loading One Week SR Riders...
             </div>
         </div>
     `;
 
-    const distances = ["200", "300", "400", "600"];
-
-    const results = await Promise.all(
+    const events = await Promise.all(
         distances.map(d =>
             fetch(
                 `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${d}`
@@ -119,7 +108,7 @@ async function showOneWeekSR() {
 
     const riderMap = {};
 
-    results.forEach((event, index) => {
+    events.forEach((event,index)=>{
 
         const distance = distances[index];
 
@@ -131,23 +120,23 @@ async function showOneWeekSR() {
                     air: rider.air,
                     name: rider.name,
                     club: rider.club,
-                    events: []
+                    rides: []
                 };
 
             }
 
-            riderMap[rider.air].events.push(distance);
+            riderMap[rider.air].rides.push(distance);
 
         });
 
     });
 
-    const riders =
+    const common =
         Object.values(riderMap)
-        .filter(r => r.events.length === 4);
+        .filter(r => r.rides.length === 4);
 
     const rows =
-        riders.map(r => `
+        common.map(r => `
             <tr>
                 <td>${r.air}</td>
                 <td>${r.name}</td>
@@ -160,7 +149,6 @@ async function showOneWeekSR() {
         `).join("");
 
     document.getElementById("eventContent").innerHTML = `
-
         <div class="event">
 
             <div class="event-title">
@@ -172,24 +160,22 @@ async function showOneWeekSR() {
                 <p>
                     Riders Registered For All 4 Events:
                     <span class="badge">
-                        ${riders.length}
+                        ${common.length}
                     </span>
                 </p>
 
                 <table>
 
                     <thead>
-
                         <tr>
-                            <th>AIR</th>
-                            <th>Rider</th>
+                            <th>AIR Number</th>
+                            <th>Rider Name</th>
                             <th>Club</th>
                             <th>200</th>
                             <th>300</th>
                             <th>400</th>
                             <th>600</th>
                         </tr>
-
                     </thead>
 
                     <tbody>
@@ -220,8 +206,9 @@ async function showEvent(distance) {
         ).then(r => r.json());
 
     const routeData =
-        await fetch(`data/${distance}.json`)
-        .then(r => r.json());
+        await fetch(
+            `data/${distance}.json`
+        ).then(r => r.json());
 
     const ridersHtml =
         (eventData.riders || [])
@@ -233,8 +220,7 @@ async function showEvent(distance) {
                 <td>${r.result}</td>
                 <td>${r.club}</td>
             </tr>
-        `)
-        .join("");
+        `).join("");
 
     const controlsHtml =
         (routeData.controls || [])
@@ -244,21 +230,18 @@ async function showEvent(distance) {
                 <td>${c.location}</td>
                 <td>${c.type}</td>
             </tr>
-        `)
-        .join("");
+        `).join("");
 
-    const checkpointsHtml =
-        (routeData.controls || [])
+    const cueSheetHtml =
+        (routeData.cueSheet || [])
         .map(c => `
             <tr>
-                <td>${c.location}</td>
                 <td>${c.km}</td>
+                <td>${c.instruction}</td>
             </tr>
-        `)
-        .join("");
+        `).join("");
 
     document.getElementById("eventContent").innerHTML = `
-
         <div class="event">
 
             <div class="event-title">
@@ -271,21 +254,34 @@ async function showEvent(distance) {
 
             <div class="section-body">
 
-                <p><strong>Registration Close:</strong> ${eventData.registrationClose}</p>
+                <p><strong>Event:</strong> ${eventData.title}</p>
 
-                <p><strong>Start Time:</strong> ${eventData.startTime}</p>
+                <p>
+                    <strong>Registration Close:</strong>
+                    ${eventData.registrationClose}
+                </p>
 
-                <p><strong>Start Location:</strong> ${eventData.startLocation}</p>
+                <p>
+                    <strong>Start Time:</strong>
+                    ${eventData.startTime}
+                </p>
+
+                <p>
+                    <strong>Start Location:</strong>
+                    ${eventData.startLocation}
+                </p>
 
                 <p>
                     <strong>Registered Riders:</strong>
-                    <span class="badge">${eventData.riderCount}</span>
+                    <span class="badge">
+                        ${eventData.riderCount}
+                    </span>
                 </p>
 
                 <a class="button green"
                    href="${EVENTS[distance].route}"
                    target="_blank">
-                   VIEW ROUTE
+                    VIEW ROUTE
                 </a>
 
             </div>
@@ -297,12 +293,11 @@ async function showEvent(distance) {
             <div class="section-body">
 
                 <table>
-
                     <thead>
                         <tr>
                             <th>S.No</th>
-                            <th>AIR</th>
-                            <th>Rider</th>
+                            <th>AIR Number</th>
+                            <th>Rider Name</th>
                             <th>Result</th>
                             <th>Club</th>
                         </tr>
@@ -311,7 +306,6 @@ async function showEvent(distance) {
                     <tbody>
                         ${ridersHtml}
                     </tbody>
-
                 </table>
 
             </div>
@@ -340,20 +334,19 @@ async function showEvent(distance) {
 
             </div>
 
-            <div class="section-title">
-  dy">
+            <div class="section-body">
 
                 <table>
 
                     <thead>
                         <tr>
-                            <th>Location</th>
                             <th>KM</th>
+                            <th>Instruction</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        ${checkpointsHtml}
+                        ${cueSheetHtml}
                     </tbody>
 
                 </table>
@@ -363,5 +356,3 @@ async function showEvent(distance) {
         </div>
     `;
 }
-
-initDashboard();

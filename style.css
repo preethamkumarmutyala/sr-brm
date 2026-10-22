@@ -4,7 +4,7 @@ body {
     background: #f5f5f5;
 }
 
-/* Header */
+/* HEADER */
 
 .header {
     background: #0f4c81;
@@ -20,17 +20,17 @@ body {
     margin-top: 10px;
 }
 
-/* Summary */
+/* SUMMARY AREA */
 
 #summary {
     background: white;
     margin: 15px;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    box-shadow: 0 2px 6px rgba(0,0,0,.1);
 }
 
-/* BRM Buttons */
+/* GREEN BRM BUTTONS */
 
 .tab-bar {
     display: flex;
@@ -49,7 +49,7 @@ body {
     font-size: 24px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,.15);
+    box-shadow: 0 2px 5px rgba(0,0,0,.2);
 }
 
 .event-tab:hover {
@@ -60,26 +60,26 @@ body {
     background: #0f4c81;
 }
 
-/* Event Card */
+/* MAIN EVENT PANEL */
 
 .event {
     background: white;
     margin: 15px;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    box-shadow: 0 2px 6px rgba(0,0,0,.1);
 }
 
 .event-title {
     background: #ececec;
     padding: 20px;
-    font-size: 30px;
+    font-size: 32px;
     font-weight: bold;
     color: #0f4c81;
 }
 
 .section-title {
-    background: #f6f6f6;
+    background: #f5f5f5;
     padding: 12px;
     font-size: 18px;
     font-weight: bold;
@@ -91,7 +91,19 @@ body {
     padding: 20px;
 }
 
-/* Route Button */
+/* REGISTRATION COUNT BADGE */
+
+.badge {
+    display: inline-block;
+    background: #28a745;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 18px;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+/* ROUTE BUTTONS */
 
 .button {
     display: inline-block;
@@ -101,7 +113,7 @@ body {
     text-decoration: none;
     font-weight: bold;
     margin-right: 10px;
-    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .green {
@@ -116,25 +128,13 @@ body {
     background: #0078d4;
 }
 
-/* Registration Badge */
-
-.badge {
-    display: inline-block;
-    background: #28a745;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-/* Excel Style Table */
+/* EXCEL STYLE TABLE */
 
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 15px;
     background: white;
-    margin-top: 10px;
 }
 
 thead {
@@ -144,4 +144,53 @@ thead {
 
 th {
     padding: 12px;
-   
+    border: 1px solid #d0d0d0;
+    text-align: left;
+}
+
+td {
+    padding: 10px;
+    border: 1px solid #dcdcdc;
+    text-align: left;
+}
+
+tbody tr:nth-child(even) {
+    background: #f8f8f8;
+}
+
+tbody tr:hover {
+    background: #e7f1ff;
+}
+
+/* CONTROLS */
+
+.control {
+    border-bottom: 1px solid #ebebeb;
+    padding: 10px;
+}
+
+.control:nth-child(even) {
+    background: #fafafa;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+    .tab-bar {
+        flex-direction: column;
+    }
+
+    .event-tab {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .event-title {
+        font-size: 24px;
+    }
+
+    table {
+        font-size: 14px;
+    }
+}

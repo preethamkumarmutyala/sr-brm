@@ -10,14 +10,26 @@ body {
     background: #0f4c81;
     color: white;
     padding: 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 25px;
 }
 
-.header h1 {
+.logo {
+    width: 140px;
+    height: auto;
+}
+
+.header-text h1 {
     margin: 0;
+    font-size: 34px;
 }
 
-.header p {
+.header-text p {
     margin-top: 10px;
+    margin-bottom: 0;
+    font-size: 16px;
 }
 
 /* SUMMARY */
@@ -30,12 +42,12 @@ body {
     box-shadow: 0 2px 6px rgba(0,0,0,.12);
 }
 
-/* BUTTON BAR */
+/* TABS */
 
 .tab-bar {
     display: flex;
-    flex-wrap: wrap;
     gap: 15px;
+    flex-wrap: wrap;
     margin-top: 20px;
 }
 
@@ -46,14 +58,16 @@ body {
     border-radius: 8px;
     min-width: 180px;
     padding: 18px 25px;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 3px 6px rgba(0,0,0,.15);
+    box-shadow: 0 2px 5px rgba(0,0,0,.15);
+    transition: 0.2s;
 }
 
 .event-tab:hover {
     background: #218838;
+    transform: translateY(-2px);
 }
 
 .event-tab.active {
@@ -73,7 +87,7 @@ body {
 .event-title {
     background: #ececec;
     padding: 20px;
-    font-size: 32px;
+    font-size: 30px;
     font-weight: bold;
     color: #0f4c81;
 }
@@ -91,19 +105,19 @@ body {
     padding: 20px;
 }
 
-/* RIDER COUNT BADGE */
+/* BADGES */
 
 .badge {
     display: inline-block;
     background: #28a745;
     color: white;
     padding: 8px 16px;
-    border-radius: 24px;
-    font-weight: bold;
+    border-radius: 20px;
     font-size: 15px;
+    font-weight: bold;
 }
 
-/* ACTION BUTTONS */
+/* BUTTONS */
 
 .button {
     display: inline-block;
@@ -128,15 +142,13 @@ body {
     background: #0078d4;
 }
 
-/* EXCEL STYLE TABLE */
+/* TABLES */
 
 table {
-    width: auto;
-    min-width: 900px;
+    width: 100%;
     border-collapse: collapse;
-    border: 1px solid #cfcfcf;
-    background: white;
     margin-top: 15px;
+    background: white;
 }
 
 thead {
@@ -145,4 +157,92 @@ thead {
 }
 
 th {
-    border:
+    padding: 12px;
+    border: 1px solid #cfcfcf;
+    text-align: left;
+}
+
+td {
+    padding: 10px;
+    border: 1px solid #d7d7d7;
+    text-align: left;
+}
+
+tbody tr:nth-child(even) {
+    background: #f8f8f8;
+}
+
+tbody tr:hover {
+    background: #eaf4ff;
+}
+
+/* RIDER TABLE COLUMN WIDTHS */
+
+th:nth-child(1),
+td:nth-child(1) {
+    width: 80px;
+    text-align: center;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+    width: 120px;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+    width: 350px;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+    width: 120px;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+    width: 250px;
+}
+
+/* CONTROLS */
+
+.control {
+    padding: 10px;
+    border: 1px solid #e3e3e3;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    background: #fafafa;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+    .header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logo {
+        width: 110px;
+    }
+
+    .tab-bar {
+        flex-direction: column;
+    }
+
+    .event-tab {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .event-title {
+        font-size: 24px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}

@@ -79,7 +79,7 @@ document.getElementById("events").innerHTML = `
         </div>
 
         <div class="section-body">
-            Choose a BRM or ONE WEEK SR RIDERS.
+            Select a BRM or ONE WEEK SR RIDERS.
         </div>
 
     </div>
@@ -92,7 +92,7 @@ async function showOneWeekSR() {
     document.getElementById("eventContent").innerHTML = `
     <div class="event">
         <div class="event-title">
-            Loading One Week SR Riders...
+            Loading ONE WEEK SR RIDERS...
         </div>
     </div>
     `;
@@ -136,8 +136,8 @@ async function showOneWeekSR() {
         Object.values(riderMap)
         .filter(r => r.events.length === 4);
 
-    const rows = riders
-        .map(r => `
+    const rows =
+        riders.map(r => `
             <tr>
                 <td>${r.air}</td>
                 <td>${r.name}</td>
@@ -147,48 +147,47 @@ async function showOneWeekSR() {
                 <td>✅</td>
                 <td>✅</td>
             </tr>
-        `)
-        .join("");
+        `).join("");
 
     document.getElementById("eventContent").innerHTML = `
-    <div class="event">
+        <div class="event">
 
-        <div class="event-title">
-            ONE WEEK SR RIDERS
+            <div class="event-title">
+                ONE WEEK SR RIDERS
+            </div>
+
+            <div class="section-body">
+
+                <p>
+                    Riders Registered For All 4 Events:
+                    <span class="badge">
+                        ${riders.length}
+                    </span>
+                </p>
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>AIR Number</th>
+                            <th>Rider Name</th>
+                            <th>Club</th>
+                            <th>200</th>
+                            <th>300</th>
+                            <th>400</th>
+                            <th>600</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${rows}
+                    </tbody>
+
+                </table>
+
+            </div>
+
         </div>
-
-        <div class="section-body">
-
-            <p>
-                Riders Registered For All 4 Events:
-                <span class="badge">
-                    ${riders.length}
-                </span>
-            </p>
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>AIR Number</th>
-                        <th>Rider Name</th>
-                        <th>Club</th>
-                        <th>200</th>
-                        <th>300</th>
-                        <th>400</th>
-                        <th>600</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    ${rows}
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
     `;
 }
 
@@ -202,161 +201,180 @@ async function showEvent(distance) {
     </div>
     `;
 
-    const eventData =
-        await fetch(
-            `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${distance}`
-        ).then(r => r.json());
+    try {
 
-    const routeData =
-        await fetch(`data/${distance}.json`)
-        .then(r => r.json());
+        const eventData =
+            await fetch(
+                `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${distance}`
+            ).then(r => r.json());
 
-    const ridersHtml =
-        (eventData.riders || [])
-        .map(r => `
-            <tr>
-                <td>${r.seq}</td>
-                <td>${r.air}</td>
-                <td>${r.name}</td>
-                <td>${r.result}</td>
-                <td>${r.club}</td>
-            </tr>
-        `)
-        .join("");
+        const routeData =
+            await fetch(`data/${distance}.json`)
+            .then(r => r.json());
 
-    const controlsHtml =
-        (routeData.controls || [])
-        .map(c => `
-            <tr>
-                <td>${c.km}</td>
-                <td>${c.location}</td>
-                <td>${c.type}</td>
-            </tr>
-        `)
-        .join("");
+        const ridersHtml =
+            (eventData.riders || [])
+            .map(r => `
+                <tr>
+                    <td>${r.seq}</td>
+                    <td>${r.air}</td>
+                    <td>${r.name}</td>
+                    <td>${r.result}</td>
+                    <td>${r.club}</td>
+                </tr>
+            `)
+            .join("");
 
-    const cueSheetHtml =
-        (routeData.cueSheet || [])
-        .map(c => `
-            <tr>
-                <td>${c.instruction}</td>
-                <td>${c.km}</td>
-            </tr>
-        `)
-        .join("");
+        const controlsHtml =
+            (routeData.controls || [])
+            .map(c => `
+                <tr>
+                    <td>${c.km}</td>
+                    <td>${c.location}</td>
+                    <td>${c.type}</td>
+                </tr>
+            `)
+            .join("");
 
-    document.getElementById("eventContent").innerHTML = `
-    <div class="event">
+        const cueSheetHtml =
+            (routeData.cueSheet || [])
+            .map(c => `
+                <tr>
+                    <td>${c.instruction}</td>
+                    <td>${c.km}</td>
+                </tr>
+            `)
+            .join("");
 
-        <div class="event-title">
-            ${eventData.title}
+        document.getElementById("eventContent").innerHTML = `
+
+        <div class="event">
+
+            <div class="event-title">
+                ${eventData.title}
+            </div>
+
+            <div class="section-title">
+                DETAILS
+            </div>
+
+            <div class="section-body">
+
+                <p><strong>Event:</strong> ${eventData.title}</p>
+
+                <p><strong>Registration Close:</strong>
+                ${eventData.registrationClose}</p>
+
+                <p><strong>Start Time:</strong>
+                ${eventData.startTime}</p>
+
+                <p><strong>Start Location:</strong>
+                ${eventData.startLocation}</p>
+
+                <p>
+                    <strong>Registered Riders:</strong>
+                    <span class="badge">
+                        ${eventData.riderCount}
+                    </span>
+                </p>
+
+                <a class="button green"
+                   href="${EVENTS[distance].route}"
+                   target="_blank">
+                   VIEW ROUTE
+                </a>
+
+            </div>
+
+            <div class="section-title">
+                FELLOW RIDERS
+            </div>
+
+            <div class="section-body">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>AIR Number</th>
+                            <th>Rider Name</th>
+                            <th>Result</th>
+                            <th>Club</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${ridersHtml}
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="section-title">
+                CONTROLS
+            </div>
+
+            <div class="section-body">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>KM</th>
+                            <th>Location</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${controlsHtml}
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="section-title">
+                ROUTE CHECKPOINTS
+            </div>
+
+            <div class="section-body">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Location</th>
+                            <th>KM</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+      e>
+
+            </div>
+
         </div>
 
-        <div class="section-title">
-            DETAILS
-        </div>
+        `;
 
-        <div class="section-body">
+    }
+    catch (err) {
 
-            <p><strong>Event:</strong> ${eventData.title}</p>
+        document.getElementById("eventContent").innerHTML = `
+        <div class="event">
 
-            <p><strong>Registration Close:</strong>
-            ${eventData.registrationClose}</p>
+            <div class="event-title">
+                Failed To Load
+            </div>
 
-            <p><strong>Start Time:</strong>
-            ${eventData.startTime}</p>
-
-            <p><strong>Start Location:</strong>
-            ${eventData.startLocation}</p>
-
-            <p>
-                <strong>Registered Riders:</strong>
-                <span class="badge">
-                    ${eventData.riderCount}
-                </span>
-            </p>
-
-            <a class="button green"
-               href="${EVENTS[distance].route}"
-               target="_blank">
-               VIEW ROUTE
-            </a>
+            <div class="section-body">
+                ${err}
+            </div>
 
         </div>
-
-        <div class="section-title">
-            FELLOW RIDERS
-        </div>
-
-        <div class="section-body">
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>S.No</th>
-                        <th>AIR Number</th>
-                        <th>Rider Name</th>
-                        <th>Result</th>
-                        <th>Club</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    ${ridersHtml}
-                </tbody>
-
-            </table>
-
-        </div>
-
-        <div class="section-title">
-            CONTROLS
-        </div>
-
-        <div class="section-body">
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>KM</th>
-                        <th>Location</th>
-                        <th>Type</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    ${controlsHtml}
-                </tbody>
-
-            </table>
-
-        </div>
-
-        <div class="section-title">
-            ROUTE CHECKPOINTS
-        </div>
-
-        <div class="section-body">
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>Location</th>
-                        <th>KM</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    ${cueSheetHtml}
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-    `;
+        `;
+    }
 }

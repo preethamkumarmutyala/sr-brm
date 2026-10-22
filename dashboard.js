@@ -1,27 +1,23 @@
 const EVENTS = {
     "600": {
-        route: "https://ridewithgps.com/routes/44588666",
-        audax: "https://www.audaxindia.in/event-e-10047"
+        route: "https://ridewithgps.com/routes/44588666"
     },
 
     "200": {
-        route: "https://ridewithgps.com/routes/49469273",
-        audax: "https://www.audaxindia.in/event-e-10048"
+        route: "https://ridewithgps.com/routes/49469273"
     },
 
     "300": {
-        route: "https://ridewithgps.com/routes/46588152",
-        audax: "https://www.audaxindia.in/event-e-10049"
+        route: "https://ridewithgps.com/routes/46588152"
     },
 
     "400": {
-        route: "https://ridewithgps.com/routes/49468783",
-        audax: "https://www.audaxindia.in/event-e-10050"
+        route: "https://ridewithgps.com/routes/49468783"
     }
 };
 
 document.getElementById("summary").innerHTML = `
-<h2>Registration Dashboard</h2>
+<h2>SR BRM Registration Dashboard</h2>
 
 <div class="tab-bar">
 
@@ -50,11 +46,11 @@ document.getElementById("events").innerHTML = `
     <div class="event">
 
         <div class="event-title">
-            Select a BRM Above
+            Select a BRM
         </div>
 
         <div class="section-body">
-            Click 600, 200, 300 or 400 BRM.
+            Click any BRM button above.
         </div>
 
     </div>
@@ -62,111 +58,121 @@ document.getElementById("events").innerHTML = `
 </div>
 `;
 
-function showEvent(distance){
+async function showEvent(distance) {
 
-    document
-        .querySelectorAll(".event-tab")
-        .forEach(btn => btn.classList.remove("active"));
-
-    event.target.classList.add("active");
-
-    const current = EVENTS[distance];
+    const event = EVENTS[distance];
 
     document.getElementById("eventContent").innerHTML = `
-
     <div class="event">
-
         <div class="event-title">
-            ${distance} BRM
+            Loading ${distance} BRM...
         </div>
+    </div>
+    `;
 
-        <div class="section-title">
-            DETAILS
-        </div>
+    try {
 
-        <div class="section-body">
+        const response =
+            await fetch(
+                `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${distance}`
+            );
 
-            <p>
-                Registration Close:
-                To be loaded from Audax
-            </p>
+        const data =
+            await response.json();
 
-            <p>
-                Start Location:
-                To be loaded from Audax
-            </p>
+        const ridersHtml =
+            (data.riders || [])
+            .map((r, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${r.air}</td>
+                    <td>${r.name}</td>
+                    <td>${r.club}</td>
+                </tr>
+            `)
+            .join("");
 
-            <p>
-                Start Time:
-                To be loaded from Audax
-            </p>
+        document.getElementById("eventContent").innerHTML = `
 
-            <a
-                class="button green"
-                href="${current.route}"
-                target="_blank">
+        <div class="event">
 
-                VIEW ROUTE
+            <div class="event-title">
+                ${data.title}
+            </div>
 
-            </a>
+            <div class="section-title">
+                DETAILS
+            </div>
 
-            <a
-                class="button orange"
-                href="${current.audax}"
-                target="_blank">
+            <div class="section-body">
 
-                AUDAX PAGE
+                <p>
+                    <strong>Registration Close:</strong>
+                    ${data.registrationClose}
+                </p>
 
-            </a>
+                <p>
+                    <strong>Registered Riders:</strong>
+                    ${data.riderCount}
+                </p>
 
-        </div>
+                <a
+                    class="button green"
+                    target="_blank"
+                    href="${event.route}">
+                    VIEW ROUTE
+                </a>
 
-        <div class="section-title">
-            FELLOW RIDERS
-        </div>
+            </div>
 
-        <div class="section-body">
+            <div class="section-title">
+                FELLOW RIDERS
+            </div>
 
-            <table>
+            <div class="section-body">
 
-                <thead>
+                <table>
 
-                    <tr>
-                        <th>#</th>
-                        <th>AIR</th>
-                        <th>Name</th>
-                        <th>Club</th>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>AIR</th>
+                            <th>Name</th>
+                            <th>Club</th>
+                        </tr>
+                    </thead>
 
-                </thead>
+                    <tbody>
+                        ${ridersHtml}
+                    </tbody>
 
-                <tbody>
+                </table>
 
-                    <tr>
-                        <td colspan="4">
-                            Rider extraction coming next
-                        </td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-        <div class="section-title">
-            CONTROLS
-        </div>
-
-        <div class="section-body">
-
-            <div class="control">
-                Controls will be loaded next.
             </div>
 
         </div>
 
-    </div>
+        `;
 
-    `;
+    }
+    catch (error) {
+
+        document.getElementById("eventContent").innerHTML = `
+
+        <div class="event">
+
+            <div class="event-title">
+                Error loading ${distance} BRM
+            </div>
+
+            <div class="section-body">
+                ${error}
+            </div>
+
+        </div>
+
+        `;
+
+    }
+
 }

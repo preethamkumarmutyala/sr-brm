@@ -18,27 +18,42 @@ body {
     background: white;
     margin: 15px;
     padding: 15px;
-    border-radius: 6px;
+    border-radius: 8px;
+    box-shadow: 0 2px 3px rgba(0,0,0,.1);
 }
 
-.event {
+details.event {
     background: white;
     margin: 15px;
-    border-radius: 6px;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    box-shadow: 0 2px 3px rgba(0,0,0,.1);
 }
 
-.event-title {
+summary.event-title {
+    list-style: none;
+    cursor: pointer;
+    padding: 18px;
     background: #ececec;
-    padding: 15px;
-    font-size: 24px;
-    font-weight: bold;
     color: #0f4c81;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+summary.event-title::-webkit-details-marker {
+    display: none;
+}
+
+summary.event-title::before {
+    content: "▶ ";
+}
+
+details[open] summary.event-title::before {
+    content: "▼ ";
 }
 
 .section-title {
-    background: #f4f4f4;
+    background: #f5f5f5;
     padding: 10px;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
@@ -52,10 +67,11 @@ body {
 .button {
     display: inline-block;
     padding: 10px 15px;
-    border-radius: 4px;
     margin-right: 10px;
+    margin-bottom: 10px;
     color: white;
     text-decoration: none;
+    border-radius: 4px;
 }
 
 .green {
@@ -64,4 +80,13 @@ body {
 
 .orange {
     background: #fd7e14;
+}
+
+.blue {
+    background: #0078d4;
+}
+
+.control {
+    padding: 6px;
+    border-bottom: 1px solid #eee;
 }

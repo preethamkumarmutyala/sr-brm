@@ -17,27 +17,25 @@ document.getElementById("summary").innerHTML = `
 <h2>SR BRM Registration Dashboard</h2>
 
 <div class="tab-bar">
+    <button class="event-tab" onclick="showOneWeekSR()">
+        ONE WEEK SR RIDERS
+    </button>
 
-<button class="event-tab" onclick="showOneWeekSR()">
-ONE WEEK SR RIDERS
-</button>
+    <button class="event-tab" onclick="showEvent('600')">
+        600 BRM
+    </button>
 
-<button class="event-tab" onclick="showEvent('600')">
-600 BRM
-</button>
+    <button class="event-tab" onclick="showEvent('200')">
+        200 BRM
+    </button>
 
-<button class="event-tab" onclick="showEvent('200')">
-200 BRM
-</button>
+    <button class="event-tab" onclick="showEvent('300')">
+        300 BRM
+    </button>
 
-<button class="event-tab" onclick="showEvent('300')">
-300 BRM
-</button>
-
-<button class="event-tab" onclick="showEvent('400')">
-400 BRM
-</button>
-
+    <button class="event-tab" onclick="showEvent('400')">
+        400 BRM
+    </button>
 </div>
 `;
 
@@ -45,15 +43,13 @@ document.getElementById("events").innerHTML = `
 <div id="eventContent">
 
     <div class="event">
-
         <div class="event-title">
-            Select an option above
+            Welcome
         </div>
 
         <div class="section-body">
-            Choose a BRM or ONE WEEK SR RIDERS
+            Select a BRM or ONE WEEK SR RIDERS.
         </div>
-
     </div>
 
 </div>
@@ -64,7 +60,7 @@ async function showOneWeekSR() {
     document.getElementById("eventContent").innerHTML = `
     <div class="event">
         <div class="event-title">
-            Loading One Week SR Riders...
+            Loading ONE WEEK SR RIDERS...
         </div>
     </div>
     `;
@@ -92,12 +88,10 @@ async function showOneWeekSR() {
             if (!riderMap[key]) {
 
                 riderMap[key] = {
-
                     air: rider.air,
                     name: rider.name,
                     club: rider.club,
                     events: []
-
                 };
 
             }
@@ -108,12 +102,12 @@ async function showOneWeekSR() {
 
     });
 
-    const oneWeekSRRiders =
+    const riders =
         Object.values(riderMap)
         .filter(r => r.events.length === 4);
 
     const rows =
-        oneWeekSRRiders.map(r => `
+        riders.map(r => `
             <tr>
                 <td>${r.air}</td>
                 <td>${r.name}</td>
@@ -136,19 +130,15 @@ async function showOneWeekSR() {
         <div class="section-body">
 
             <p>
-                <strong>
-                Riders Registered For All 4 Events:
-                </strong>
-
+                <strong>Total Riders:</strong>
                 <span class="badge">
-                    ${oneWeekSRRiders.length}
+                    ${riders.length}
                 </span>
             </p>
 
             <table>
 
                 <thead>
-
                     <tr>
                         <th>AIR Number</th>
                         <th>Rider Name</th>
@@ -158,13 +148,10 @@ async function showOneWeekSR() {
                         <th>400</th>
                         <th>600</th>
                     </tr>
-
                 </thead>
 
                 <tbody>
-
                     ${rows}
-
                 </tbody>
 
             </table>
@@ -172,7 +159,6 @@ async function showOneWeekSR() {
         </div>
 
     </div>
-
     `;
 }
 
@@ -270,9 +256,7 @@ async function showEvent(distance) {
                     </thead>
 
                     <tbody>
-
                         ${ridersHtml}
-
                     </tbody>
 
                 </table>
@@ -290,14 +274,7 @@ async function showEvent(distance) {
         <div class="event">
 
             <div class="event-title">
-                Failed to load
+                Failed To Load
             </div>
 
-            <div class="section-body">
-                ${err}
-            </div>
-
-        </div>
-        `;
-    }
-}
+            <div class="section

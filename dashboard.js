@@ -63,11 +63,11 @@ async function showEvent(distance) {
     const event = EVENTS[distance];
 
     document.getElementById("eventContent").innerHTML = `
-        <div class="event">
-            <div class="event-title">
-                Loading...
-            </div>
+    <div class="event">
+        <div class="event-title">
+            Loading...
         </div>
+    </div>
     `;
 
     try {
@@ -133,4 +133,46 @@ async function showEvent(distance) {
                 FELLOW RIDERS
             </div>
 
- 
+            <div class="section-body">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>AIR Number</th>
+                            <th>Rider Name</th>
+                            <th>Result</th>
+                            <th>Club</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${ridersHtml}
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        `;
+
+    }
+    catch (err) {
+
+        document.getElementById("eventContent").innerHTML = `
+        <div class="event">
+
+            <div class="event-title">
+                Failed to load
+            </div>
+
+            <div class="section-body">
+                ${err}
+            </div>
+
+        </div>
+        `;
+    }
+}

@@ -233,14 +233,22 @@ async function showEvent(distance) {
         .join("");
 
     const cueSheetHtml =
-        (routeData.cueSheet || [])
+    (routeData.cueSheet && routeData.cueSheet.length)
+    ? routeData.cueSheet
         .map(c => `
             <tr>
                 <td>${c.km}</td>
                 <td>${c.instruction}</td>
             </tr>
         `)
-        .join("");
+        .join("")
+    : `
+        <tr>
+            <td colspan="2">
+                Cue Sheet not available
+            </td>
+        </tr>
+      `;
 
     document.getElementById("eventContent").innerHTML = `
 

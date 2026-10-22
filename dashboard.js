@@ -13,96 +13,106 @@ const EVENTS = {
     }
 };
 
-loadSummary();
+async function initDashboard() {
 
-async function loadSummary() {
+    document.getElementById("events").innerHTML = `
+        <div class="event">
+            <div class="event-title">
+                Loading Dashboard...
+            </div>
+        </div>
+    `;
 
-    const results = await Promise.all([
-        fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/600").then(r => r.json()),
-        fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/200").then(r => r.json()),
-        fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/300").then(r => r.json()),
-        fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/400").then(r => r.json())
-    ]);
+    const [e600, e200, e300, e400] =
+        await Promise.all([
+            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/600").then(r => r.json()),
+            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/200").then(r => r.json()),
+            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/300").then(r => r.json()),
+            fetch("https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/400").then(r => r.json())
+        ]);
 
-    const total =
-        results[0].riderCount +
-        results[1].riderCount +
-        results[2].riderCount +
-        results[3].riderCount;
+    const totalRegistrations =
+        e600.riderCount +
+        e200.riderCount +
+        e300.riderCount +
+        e400.riderCount;
 
     document.getElementById("summary").innerHTML = `
+
         <h2>One Week SR Tracker</h2>
 
         <p>
             Total Registrations:
-            <span class="badge">${total}</span>
+            <span class="badge">
+                ${totalRegistrations}
+            </span>
         </p>
 
         <div class="tab-bar">
 
             <button class="event-tab"
-                onclick="showOneWeekSR()">
+                    onclick="showOneWeekSR()">
                 ONE WEEK SR RIDERS
             </button>
 
             <button class="event-tab"
-                onclick="showEvent('600')">
-                600 BRM (${results[0].riderCount})
+                    onclick="showEvent('600')">
+                600 BRM (${e600.riderCount})
             </button>
 
             <button class="event-tab"
-                onclick="showEvent('200')">
-                200 BRM (${results[1].riderCount})
+                    onclick="showEvent('200')">
+                200 BRM (${e200.riderCount})
             </button>
 
             <button class="event-tab"
-                onclick="showEvent('300')">
-                300 BRM (${results[2].riderCount})
+                    onclick="showEvent('300')">
+                300 BRM (${e300.riderCount})
             </button>
 
             <button class="event-tab"
-                onclick="showEvent('400')">
-                400 BRM (${results[3].riderCount})
+                    onclick="showEvent('400')">
+                400 BRM (${e400.riderCount})
             </button>
+
+        </div>
+    `;
+
+    document.getElementById("events").innerHTML = `
+        <div id="eventContent">
+
+            <div class="event">
+
+                <div class="event-title">
+                    Welcome
+                </div>
+
+                <div class="section-body">
+                    Select a BRM or ONE WEEK SR RIDERS.
+                </div>
+
+            </div>
 
         </div>
     `;
 }
 
-document.getElementById("events").innerHTML = `
-<div id="eventContent">
-
-    <div class="event">
-
-        <div class="event-title">
-            Welcome
-        </div>
-
-        <div class="section-body">
-            Select a BRM or ONE WEEK SR RIDERS.
-        </div>
-
-    </div>
-
-</div>
-`;
-
 async function showOneWeekSR() {
 
     document.getElementById("eventContent").innerHTML = `
-    <div class="event">
-        <div class="event-title">
-            Loading ONE WEEK SR RIDERS...
+        <div class="event">
+            <div class="event-title">
+                Loading ONE WEEK SR Riders...
+            </div>
         </div>
-    </div>
     `;
 
     const distances = ["200", "300", "400", "600"];
 
     const results = await Promise.all(
-        distances.map(distance =>
+        distances.map(d =>
             fetch(
-                `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${distance}`
+                `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${d}`
             ).then(r => r.json())
         )
     );
@@ -150,6 +160,7 @@ async function showOneWeekSR() {
         `).join("");
 
     document.getElementById("eventContent").innerHTML = `
+
         <div class="event">
 
             <div class="event-title">
@@ -168,15 +179,17 @@ async function showOneWeekSR() {
                 <table>
 
                     <thead>
+
                         <tr>
-                            <th>AIR Number</th>
-                            <th>Rider Name</th>
+                            <th>AIR</th>
+                            <th>Rider</th>
                             <th>Club</th>
                             <th>200</th>
                             <th>300</th>
                             <th>400</th>
                             <th>600</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
@@ -194,59 +207,57 @@ async function showOneWeekSR() {
 async function showEvent(distance) {
 
     document.getElementById("eventContent").innerHTML = `
-    <div class="event">
-        <div class="event-title">
-            Loading...
+        <div class="event">
+            <div class="event-title">
+                Loading...
+            </div>
         </div>
-    </div>
     `;
 
-    try {
+    const eventData =
+        await fetch(
+            `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${distance}`
+        ).then(r => r.json());
 
-        const eventData =
-            await fetch(
-                `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${distance}`
-            ).then(r => r.json());
+    const routeData =
+        await fetch(`data/${distance}.json`)
+        .then(r => r.json());
 
-        const routeData =
-            await fetch(`data/${distance}.json`)
-            .then(r => r.json());
+    const ridersHtml =
+        (eventData.riders || [])
+        .map(r => `
+            <tr>
+                <td>${r.seq}</td>
+                <td>${r.air}</td>
+                <td>${r.name}</td>
+                <td>${r.result}</td>
+                <td>${r.club}</td>
+            </tr>
+        `)
+        .join("");
 
-        const ridersHtml =
-            (eventData.riders || [])
-            .map(r => `
-                <tr>
-                    <td>${r.seq}</td>
-                    <td>${r.air}</td>
-                    <td>${r.name}</td>
-                    <td>${r.result}</td>
-                    <td>${r.club}</td>
-                </tr>
-            `)
-            .join("");
+    const controlsHtml =
+        (routeData.controls || [])
+        .map(c => `
+            <tr>
+                <td>${c.km}</td>
+                <td>${c.location}</td>
+                <td>${c.type}</td>
+            </tr>
+        `)
+        .join("");
 
-        const controlsHtml =
-            (routeData.controls || [])
-            .map(c => `
-                <tr>
-                    <td>${c.km}</td>
-                    <td>${c.location}</td>
-                    <td>${c.type}</td>
-                </tr>
-            `)
-            .join("");
+    const checkpointsHtml =
+        (routeData.controls || [])
+        .map(c => `
+            <tr>
+                <td>${c.location}</td>
+                <td>${c.km}</td>
+            </tr>
+        `)
+        .join("");
 
-        const cueSheetHtml =
-            (routeData.cueSheet || [])
-            .map(c => `
-                <tr>
-                    <td>${c.instruction}</td>
-                    <td>${c.km}</td>
-                </tr>
-            `)
-            .join("");
-
-        document.getElementById("eventContent").innerHTML = `
+    document.getElementById("eventContent").innerHTML = `
 
         <div class="event">
 
@@ -260,22 +271,15 @@ async function showEvent(distance) {
 
             <div class="section-body">
 
-                <p><strong>Event:</strong> ${eventData.title}</p>
+                <p><strong>Registration Close:</strong> ${eventData.registrationClose}</p>
 
-                <p><strong>Registration Close:</strong>
-                ${eventData.registrationClose}</p>
+                <p><strong>Start Time:</strong> ${eventData.startTime}</p>
 
-                <p><strong>Start Time:</strong>
-                ${eventData.startTime}</p>
-
-                <p><strong>Start Location:</strong>
-                ${eventData.startLocation}</p>
+                <p><strong>Start Location:</strong> ${eventData.startLocation}</p>
 
                 <p>
                     <strong>Registered Riders:</strong>
-                    <span class="badge">
-                        ${eventData.riderCount}
-                    </span>
+                    <span class="badge">${eventData.riderCount}</span>
                 </p>
 
                 <a class="button green"
@@ -297,8 +301,8 @@ async function showEvent(distance) {
                     <thead>
                         <tr>
                             <th>S.No</th>
-                            <th>AIR Number</th>
-                            <th>Rider Name</th>
+                            <th>AIR</th>
+                            <th>Rider</th>
                             <th>Result</th>
                             <th>Club</th>
                         </tr>
@@ -337,10 +341,7 @@ async function showEvent(distance) {
             </div>
 
             <div class="section-title">
-                ROUTE CHECKPOINTS
-            </div>
-
-            <div class="section-body">
+  dy">
 
                 <table>
 
@@ -352,29 +353,15 @@ async function showEvent(distance) {
                     </thead>
 
                     <tbody>
-      e>
+                        ${checkpointsHtml}
+                    </tbody>
+
+                </table>
 
             </div>
 
         </div>
-
-        `;
-
-    }
-    catch (err) {
-
-        document.getElementById("eventContent").innerHTML = `
-        <div class="event">
-
-            <div class="event-title">
-                Failed To Load
-            </div>
-
-            <div class="section-body">
-                ${err}
-            </div>
-
-        </div>
-        `;
-    }
+    `;
 }
+
+initDashboard();

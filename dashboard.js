@@ -13,33 +13,73 @@ const EVENTS = {
     }
 };
 
-document.getElementById("summary").innerHTML = `
-<h2>SR BRM Registration Dashboard</h2>
+loadSummary();
 
-<div class="tab-bar">
+async function loadSummary() {
 
-<button class="event-tab" onclick="showOneWeekSR()">
-ONE WEEK SR RIDERS
-</button>
+    const e600 =
+        await fetch(
+            "https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/600"
+        ).then(r => r.json());
 
-<button class="event-tab" onclick="showEvent('600')">
-600 BRM
-</button>
+    const e200 =
+        await fetch(
+            "https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/200"
+        ).then(r => r.json());
 
-<button class="event-tab" onclick="showEvent('200')">
-200 BRM
-</button>
+    const e300 =
+        await fetch(
+            "https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/300"
+        ).then(r => r.json());
 
-<button class="event-tab" onclick="showEvent('300')">
-300 BRM
-</button>
+    const e400 =
+        await fetch(
+            "https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/400"
+        ).then(r => r.json());
 
-<button class="event-tab" onclick="showEvent('400')">
-400 BRM
-</button>
+    const total =
+        e600.riderCount +
+        e200.riderCount +
+        e300.riderCount +
+        e400.riderCount;
 
-</div>
-`;
+    document.getElementById("summary").innerHTML = `
+
+    <h2>SR BRM Registration Dashboard</h2>
+
+    <p>
+        Total Registrations:
+        <span class="badge">
+            ${total}
+        </span>
+    </p>
+
+    <div class="tab-bar">
+
+        <button class="event-tab" onclick="showOneWeekSR()">
+            ONE WEEK SR RIDERS
+        </button>
+
+        <button class="event-tab" onclick="showEvent('600')">
+            600 BRM (${e600.riderCount})
+        </button>
+
+        <button class="event-tab" onclick="showEvent('200')">
+            200 BRM (${e200.riderCount})
+        </button>
+
+        <button class="event-tab" onclick="showEvent('300')">
+            300 BRM (${e300.riderCount})
+        </button>
+
+        <button class="event-tab" onclick="showEvent('400')">
+            400 BRM (${e400.riderCount})
+        </button>
+
+    </div>
+
+    `;
+}
 
 document.getElementById("events").innerHTML = `
 <div id="eventContent">

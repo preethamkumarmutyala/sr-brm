@@ -2,15 +2,12 @@ const EVENTS = {
     "600": {
         route: "https://ridewithgps.com/routes/44588666"
     },
-
     "200": {
         route: "https://ridewithgps.com/routes/49469273"
     },
-
     "300": {
         route: "https://ridewithgps.com/routes/46588152"
     },
-
     "400": {
         route: "https://ridewithgps.com/routes/49468783"
     }
@@ -21,8 +18,8 @@ document.getElementById("summary").innerHTML = `
 
 <div class="tab-bar">
 
-<button class="event-tab" onclick="showCommonRiders()">
-SR CANDIDATES
+<button class="event-tab" onclick="showOneWeekSR()">
+ONE WEEK SR RIDERS
 </button>
 
 <button class="event-tab" onclick="showEvent('600')">
@@ -46,20 +43,28 @@ SR CANDIDATES
 
 document.getElementById("events").innerHTML = `
 <div id="eventContent">
-<div class="event">
-<div class="event-title">
-Select a BRM
-</div>
-</div>
+
+    <div class="event">
+
+        <div class="event-title">
+            Select an option above
+        </div>
+
+        <div class="section-body">
+            Choose a BRM or ONE WEEK SR RIDERS
+        </div>
+
+    </div>
+
 </div>
 `;
 
-async function showCommonRiders() {
+async function showOneWeekSR() {
 
     document.getElementById("eventContent").innerHTML = `
     <div class="event">
         <div class="event-title">
-            Loading SR Candidates...
+            Loading One Week SR Riders...
         </div>
     </div>
     `;
@@ -67,9 +72,9 @@ async function showCommonRiders() {
     const distances = ["200", "300", "400", "600"];
 
     const results = await Promise.all(
-        distances.map(d =>
+        distances.map(distance =>
             fetch(
-                `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${d}`
+                `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${distance}`
             ).then(r => r.json())
         )
     );
@@ -85,12 +90,16 @@ async function showCommonRiders() {
             const key = rider.air;
 
             if (!riderMap[key]) {
+
                 riderMap[key] = {
+
                     air: rider.air,
                     name: rider.name,
                     club: rider.club,
                     events: []
+
                 };
+
             }
 
             riderMap[key].events.push(distance);
@@ -99,12 +108,12 @@ async function showCommonRiders() {
 
     });
 
-    const commonRiders =
+    const oneWeekSRRiders =
         Object.values(riderMap)
         .filter(r => r.events.length === 4);
 
-    const rows = commonRiders
-        .map(r => `
+    const rows =
+        oneWeekSRRiders.map(r => `
             <tr>
                 <td>${r.air}</td>
                 <td>${r.name}</td>
@@ -114,23 +123,25 @@ async function showCommonRiders() {
                 <td>✅</td>
                 <td>✅</td>
             </tr>
-        `)
-        .join("");
+        `).join("");
 
     document.getElementById("eventContent").innerHTML = `
 
     <div class="event">
 
         <div class="event-title">
-            Super Randonneur Candidates
+            ONE WEEK SR RIDERS
         </div>
 
         <div class="section-body">
 
             <p>
-                Total SR Candidates:
+                <strong>
+                Riders Registered For All 4 Events:
+                </strong>
+
                 <span class="badge">
-                    ${commonRiders.length}
+                    ${oneWeekSRRiders.length}
                 </span>
             </p>
 
@@ -139,8 +150,8 @@ async function showCommonRiders() {
                 <thead>
 
                     <tr>
-                        <th>AIR</th>
-                        <th>Name</th>
+                        <th>AIR Number</th>
+                        <th>Rider Name</th>
                         <th>Club</th>
                         <th>200</th>
                         <th>300</th>
@@ -177,93 +188,116 @@ async function showEvent(distance) {
     </div>
     `;
 
-    const response =
-        await fetch(
-            `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${distance}`
-        );
+    try {
 
-    const data =
-        await response.json();
+        const response =
+            await fetch(
+                `https://sr-brm-api.secunderabadrandonneurs.workers.dev/event/${distance}`
+            );
 
-    const ridersHtml =
-        (data.riders || [])
-        .map(r => `
-            <tr>
-                <td>${r.seq}</td>
-                <td>${r.air}</td>
-                <td>${r.name}</td>
-                <td>${r.result}</td>
-                <td>${r.club}</td>
-            </tr>
-        `)
-        .join("");
+        const data =
+            await response.json();
 
-    document.getElementById("eventContent").innerHTML = `
+        const ridersHtml =
+            (data.riders || [])
+            .map(r => `
+                <tr>
+                    <td>${r.seq}</td>
+                    <td>${r.air}</td>
+                    <td>${r.name}</td>
+                    <td>${r.result}</td>
+                    <td>${r.club}</td>
+                </tr>
+            `)
+            .join("");
 
-    <div class="event">
+        document.getElementById("eventContent").innerHTML = `
 
-        <div class="event-title">
-            ${data.title}
+        <div class="event">
+
+            <div class="event-title">
+                ${data.title}
+            </div>
+
+            <div class="section-title">
+                DETAILS
+            </div>
+
+            <div class="section-body">
+
+                <p>
+                    <strong>Registration Close:</strong>
+                    ${data.registrationClose}
+                </p>
+
+                <p>
+                    <strong>Registered Riders:</strong>
+
+                    <span class="badge">
+                        ${data.riderCount}
+                    </span>
+                </p>
+
+                <a
+                    class="button green"
+                    href="${event.route}"
+                    target="_blank">
+
+                    VIEW ROUTE
+
+                </a>
+
+            </div>
+
+            <div class="section-title">
+                FELLOW RIDERS
+            </div>
+
+            <div class="section-body">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>S.No</th>
+                            <th>AIR Number</th>
+                            <th>Rider Name</th>
+                            <th>Result</th>
+                            <th>Club</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        ${ridersHtml}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
         </div>
 
-        <div class="section-title">
-            DETAILS
-        </div>
+        `;
 
-        <div class="section-body">
+    }
+    catch (err) {
 
-            <p>
-                <strong>Registration Close:</strong>
-                ${data.registrationClose}
-            </p>
+        document.getElementById("eventContent").innerHTML = `
+        <div class="event">
 
-            <p>
-                <strong>Registered Riders:</strong>
-                <span class="badge">
-                    ${data.riderCount}
-                </span>
-            </p>
+            <div class="event-title">
+                Failed to load
+            </div>
 
-            <a
-                class="button green"
-                href="${event.route}"
-                target="_blank">
-                VIEW ROUTE
-            </a>
+            <div class="section-body">
+                ${err}
+            </div>
 
         </div>
-
-        <div class="section-title">
-            FELLOW RIDERS
-        </div>
-
-        <div class="section-body">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-                        <th>S.No</th>
-                        <th>AIR Number</th>
-                        <th>Rider Name</th>
-                        <th>Result</th>
-                        <th>Club</th>
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    ${ridersHtml}
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-    `;
+        `;
+    }
 }
